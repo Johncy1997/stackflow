@@ -1,0 +1,163 @@
+import React, { Component } from 'react';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    Image,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    TextInput
+} from 'react-native';
+import { Dropdown } from 'react-native-material-dropdown';
+import RouteNames from '../navigators/RouteNames';
+
+const NUMBERS = [
+    {
+        value: "646-398-XXXX"
+    },
+    {
+        value: "876-398-XXXX"
+    },
+    {
+        value: "646-682-XXXX"
+    },
+    {
+        value: "646-987-XXXX"
+    },
+    {
+        value: "232-398-XXXX"
+    },
+    {
+        value: "213-398-XXXX"
+    },
+    {
+        value: "646-682-XXXX"
+    },
+    {
+        value: "646-987-XXXX"
+    },
+    {
+        value: "232-398-XXXX"
+    },
+    {
+        value: "213-398-XXXX"
+    },
+    {
+        value: "646-682-XXXX"
+    },
+    {
+        value: "646-987-XXXX"
+    },
+    {
+        value: "232-398-XXXX"
+    },
+    {
+        value: "213-398-XXXX"
+    },
+    {
+        value: "646-682-XXXX"
+    },
+    {
+        value: "646-987-XXXX"
+    },
+    {
+        value: "232-398-XXXX"
+    },
+    {
+        value: "213-398-XXXX"
+    }
+]
+export default class SelectNumber extends Component {
+    static navigationOptions = ({ navigation }) => ({
+        title: "Select number",
+        headerLeft: <TouchableOpacity onPress={() => navigation.openDrawer()} style={{ height: 20, width: 40, marginLeft: 10 }}>
+            <Image source={require('../assets/images.png')} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+        </TouchableOpacity>,
+        headerRight: <TouchableOpacity onPress={() => navigation.navigate(RouteNames.HomeStack.help)} style={{ height: 20, width: 40, marginRight: 10 }}>
+            <Image source={require('../assets/ques.png')} style={{ height: '100%', width: '100%', resizeMode: 'contain' }} />
+        </TouchableOpacity>
+    });
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            phone: ""
+        }
+    }
+
+    render() {
+        return (
+            <SafeAreaView style={{ flex: 1 }}>
+                <StatusBar barStyle='dark-content' backgroundColor="white" />
+                <View>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20 }} showsVerticalScrollIndicator={false}>
+                        <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Pick the first six digits of their new number</Text>
+                        <Text style={{ fontSize: 16, marginTop: 10 }}>The first six digits of their new phone number are based on the ZIP code you providec.</Text>
+                        <View
+                            style={{
+                                height: 5,
+                                marginTop: 10,
+                                backgroundColor: 'black'
+                            }}
+                        />
+                        <Text style={{ fontSize: 16, marginTop: 10, color: 'grey' }}>Phone number</Text>
+                        <Dropdown
+                            containerStyle={{
+                                borderColor: 'grey',
+                                borderWidth: 1,
+                                width: '100%',
+                                height: 50,
+                                borderBottomWidth: 3,
+                                borderBottomColor: 'black',
+                                justifyContent: 'center',
+                                paddingLeft: 5,
+                                paddingRight: 5,
+                                marginTop: 10
+                            }}
+                            inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                            label=""
+                            data={NUMBERS}
+                            labelPadding={50}
+                            labelHeight={10}
+                            itemPadding={5}
+                            fontSize={16}
+                            baseColor='black'
+                            textColor='black'
+                            disabledLineType='none'
+                            itemColor='black'
+                            selectedItemColor='black'
+                            value={this.state.phone}
+                            animationDuration={100}
+                            onChangeText={(value) => { this.setState({ phone: value }) }}
+                            labelTextStyle={[{
+                                fontSize: 16,
+                                color: 'black'
+                            }]}
+                            itemTextStyle={[{
+                                fontSize: 16,
+                                color: 'black'
+                            }]}
+                            renderAccessory={() => <Image source={require('../assets/drop.png')} style={{height:'100%',width:30,resizeMode:'contain'}}/>}
+                            pickerStyle={{ borderBottomColor: 'transparent',marginLeft: 10,marginTop:65,marginRight:10,width:'92%' }}
+                        />
+                        {
+                            this.state.phone ? <TouchableOpacity
+                                onPress={() => this.props.navigation.popToTop(RouteNames.HomeStack.selectNumber, { phone: this.state.phone })}
+                                style={{
+                                    height: 50, backgroundColor: 'black', borderRadius: 25,
+                                    justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: 160,
+                                    marginTop: 40
+                                }}>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Next</Text>
+                            </TouchableOpacity> : null
+                        }
+                    </ScrollView>
+                </View>
+                <TouchableOpacity style={{ position: 'absolute', bottom: 10, right: 10, }}>
+                    <Image style={{ height: 40, width: 40, resizeMode: 'contain', tintColor: 'blue' }} source={require('../assets/record.png')} />
+                </TouchableOpacity>
+            </SafeAreaView>
+        )
+    }
+}

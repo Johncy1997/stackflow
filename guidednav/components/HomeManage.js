@@ -7,6 +7,7 @@ import {
     SafeAreaView,
     StatusBar,
     ScrollView,
+    TouchableWithoutFeedback,
     FlatList
 } from 'react-native';
 import Voice from 'react-native-voice';
@@ -47,7 +48,8 @@ const Options = [
     }
 ]
 
-const keywords = ["Change Mobile Number", "I want to change mobile number", "Edit Number"];
+const keywords = ["Change Mobile Number", "I want to change mobile number", "Edit Number", "change number"];
+
 class HomeManage extends Component {
 
     static navigationOptions = ({ navigation }) => ({
@@ -64,7 +66,8 @@ class HomeManage extends Component {
         super(props);
         this.state = {
             speechInProgress: false,
-            results: []
+            results: [],
+            active: -1
         }
         Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
         Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
@@ -92,12 +95,17 @@ class HomeManage extends Component {
             var check = keywords.some(r => this.state.results.indexOf(r) >= 0);
             if (check) {
                 showToaster("We are directing...");
-                speakMessage("Please click the highlighted field");
+                speakMessage("Please select this option to start changing your number.");
                 this["Change mobile number5"].measure((x, y, width, height, pageX, pageY) => {
                     console.log(x, y, width, height, pageX, pageY);
-                    this._scrollView.scrollTo({ y: pageY, animated: true })
+                    this.setState({
+                        active: 5
+                    }, () => {
+                        this._scrollView.scrollTo({ y: pageY, animated: true })
+                    })
+
                 });
-                this.props.start();
+                // this.props.start();
             }
         });
     }
@@ -112,7 +120,7 @@ class HomeManage extends Component {
             console.log(err);
         })
         showToaster("How may I help you?");
-        speakMessage('How may i help you?');
+        speakMessage("Hello Dunking, I'm your voice assistant. I can you help you with your transactions over voice. Feel free to ask me any questions during the transaction. Let’s get started ");
     }
 
     onStartButtonPress(e) {
@@ -151,9 +159,13 @@ class HomeManage extends Component {
                                     speakMessage("We will direct you to change the mobile number");
                                     this["Change mobile number5"].measure((x, y, width, height, pageX, pageY) => {
                                         console.log(x, y, width, height, pageX, pageY);
-                                        this._scrollView.scrollTo({ y: pageY, animated: true })
+                                        this.setState({
+                                            active: 5
+                                        }, () => {
+                                            this._scrollView.scrollTo({ y: pageY, animated: true })
+                                        })
                                     });
-                                    this.props.start();
+                                    // this.props.start();
                                 }}>Ready to upgrade</Text>
                                 <View
                                     style={{
@@ -178,18 +190,45 @@ class HomeManage extends Component {
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item, index }) => {
                                 return (
-                                    <CopilotStep
-                                        order={index == 5 ? 1 : -1}
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                active:-1
+                                            },()=>{
+                                                this.props.navigation.navigate(item.routeName);
+                                            })
+                                        }}
+                                        style={[{
+                                            flexDirection: 'row', justifyContent: 'space-between',
+                                            alignItems: 'center', paddingTop: 20, paddingBottom: 20
+                                        }, index === this.state.active ? {
+                                            shadowColor: "red",
+                                            shadowOffset: {
+                                                width: 0,
+                                                height: 2,
+                                            },
+                                            shadowOpacity: 0.51,
+                                            shadowRadius: 13.16,
+                                            elevation: 20,
+                                            backgroundColor:'#ddb8ca'
+                                        } : {}]}
                                     >
-                                        <WalkthroughableTouchableOpacity
-                                            onPress={() => { this.props.navigation.navigate(item.routeName); 
-                                            }}
-                                            style={{ flexDirection: 'row', justifyContent: 'space-between', 
-                                            alignItems: 'center', paddingTop: 20, paddingBottom: 20 }}
-                                        >
-                                            <Text ref={(ref) => { this[`${item.name}${index}`] = ref; }}>{item.name}</Text>
-                                            <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../assets/rightarrow.png')} />
-                                        </WalkthroughableTouchableOpacity></CopilotStep>)
+                                        <Text ref={(ref) => { this[`${item.name}${index}`] = ref; }}>{item.name}</Text>
+                                        <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../assets/rightarrow.png')} />
+                                    </TouchableOpacity>
+                                    // <CopilotStep
+                                    //     order={index == this.state.active ? 1 : -1}
+                                    // >
+                                    //     <WalkthroughableTouchableOpacity
+                                    //         onPress={() => { this.props.navigation.navigate(item.routeName); 
+                                    //         }}
+                                    //         style={{ flexDirection: 'row', justifyContent: 'space-between', 
+                                    //         alignItems: 'center', paddingTop: 20, paddingBottom: 20 }}
+                                    //     >
+                                    //         <Text ref={(ref) => { this[`${item.name}${index}`] = ref; }}>{item.name}</Text>
+                                    //         <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../assets/rightarrow.png')} />
+                                    //     </WalkthroughableTouchableOpacity></CopilotStep>
+                                )
                             }}
                             keyExtractor={(item, index) => item.name}
                         />
@@ -216,7 +255,9 @@ const TooltipComponent = ({
     handleStop,
     currentStep,
 }) => (
-        <View />
+        <TouchableWithoutFeedback onPress={() => handleStop()}>
+            <View />
+        </TouchableWithoutFeedback>
     );
 
 const StepNumberComponent = ({
@@ -225,27 +266,28 @@ const StepNumberComponent = ({
     currentStep,
     currentStepNumber,
 }) => (
-        <View/>
+        <View />
     );
 
 const style = {
     paddingBottom: 0,
     paddingTop: 0,
-    padding:0,
-    paddingHorizontal:0,
-    height:30,
-    justifyContent:'center'
+    padding: 0,
+    paddingHorizontal: 0,
+    height: 0,
+    justifyContent: 'center'
 };
 
 export default copilot({
     animated: true,
     overlay: "svg",
-    // tooltipComponent: TooltipComponent,
-    androidStatusBarVisible:false,
+    tooltipComponent: TooltipComponent,
+    androidStatusBarVisible: false,
     stepNumberComponent: StepNumberComponent,
     tooltipStyle: style,
-    labels:{
-        finish:'ok'
+    labels: {
+        finish: 'ok'
     },
     backdropColor: "rgba(50, 50, 100, 0.9)",
+    verticalOffset: 25,
 })(HomeManage);

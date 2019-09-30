@@ -9,8 +9,11 @@ import {
     StatusBar,
     TextInput
 } from 'react-native';
+import Voice from 'react-native-voice';
+import { showToaster, speakMessage } from '../utils/CommonFunctions';
 import RouteNames from '../navigators/RouteNames';
 
+const keywords = ["Why do you need zip code for","why","why you need zip code"];
 export default class EnterZip extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: "Enter Zip",
@@ -25,10 +28,56 @@ export default class EnterZip extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            zipCode: ""
+            zipCode: "",
+            speechInProgress: false,
+            results: [],
+            highlight: true
         }
+        Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
+        Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
+        Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
     }
 
+    componentDidMount() {
+        speakMessage("Please enter your zip code here");
+    }
+
+    onSpeechStartHandler(e) {
+        this.setState({
+            speechInProgress: true
+        })
+    }
+
+    onSpeechEndHandler(e) {
+        this.setState({
+            speechInProgress: false
+        }, () => {
+            Voice.stop();
+        })
+    }
+
+    onSpeechResultsHandler(e) {
+        this.setState({
+            results: e.value
+        }, () => {
+            var check = keywords.some(r => this.state.results.indexOf(r) >= 0);
+            console.log(check);
+            if (check) {
+                showToaster("kjsd");
+                speakMessage("Providing zip code lets you choose from the list of eligible first 6 digits of your number");
+            }
+        })
+    }
+
+    onStartButtonPress(e) {
+        Voice.start('en-US', {
+            "RECOGNIZER_ENGINE": "GOOGLE",
+            "EXTRA_PARTIAL_RESULTS": true
+        }).then(onFulfilled => {
+        }).catch(err => {
+            console.log(err);
+        });
+    }
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -49,25 +98,43 @@ export default class EnterZip extends Component {
                             value={this.state.zipCode}
                             keyboardType='number-pad'
                             maxLength={6}
+                            onFocus={() => this.setState({ highlight: false })}
                             underlineColorAndroid="transparent"
-                            onChangeText={(value)=>this.setState({zipCode:value})}
-                            style={{ borderWidth: 1, borderColor: 'grey', borderBottomWidth: 3, borderBottomColor: 'black', padding: 10, marginTop: 10 }}
+                            onChangeText={(value) => this.setState({ zipCode: value })}
+                            style={[{
+                                borderWidth: 1, borderColor: 'grey', borderBottomWidth: 3, borderBottomColor: 'black',
+                                padding: 10, marginTop: 10,
+                            }, this.state.highlight ? {
+                                shadowColor: "red",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.51,
+                                shadowRadius: 13.16,
+                                elevation: 10,
+                                backgroundColor: '#ddb8ca'
+                            } : {}]}
                         />
                         {
-                            this.state.zipCode?<TouchableOpacity 
-                            onPress={()=>this.props.navigation.navigate(RouteNames.HomeStack.selectNumber,{zipCode:this.state.zipCode})}
-                            style={{
-                                height: 50, backgroundColor: 'black', borderRadius: 25,
-                                justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: 160,
-                                marginTop: 40
-                            }}>
+                            this.state.zipCode ? <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate(RouteNames.HomeStack.selectNumber, { zipCode: this.state.zipCode })}
+                                style={{
+                                    height: 50, backgroundColor: 'black', borderRadius: 25,
+                                    justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: 160,
+                                    marginTop: 40
+                                }}>
                                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Next</Text>
-                            </TouchableOpacity>:null
+                            </TouchableOpacity> : null
                         }
                     </ScrollView>
                 </View>
-                <TouchableOpacity style={{ position: 'absolute', bottom: 10, right: 10, }}>
-                    <Image style={{ height: 40, width: 40, resizeMode: 'contain', tintColor: 'blue' }} source={require('../assets/record.png')} />
+                <TouchableOpacity
+                    onPress={() => {
+                        this.onStartButtonPress();
+                    }}
+                    style={{ position: 'absolute', bottom: 10, right: 10, }}>
+                    <Image style={{ height: 40, width: 40, resizeMode: 'contain', tintColor: this.state.speechInProgress ? 'blue' : 'black' }} source={require('../assets/record.png')} />
                 </TouchableOpacity>
             </SafeAreaView>
         )

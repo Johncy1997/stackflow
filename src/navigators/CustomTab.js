@@ -67,7 +67,7 @@ export default class CustomTab extends Component {
                         paddingRight: OnePart * 2,
                     }}>
                         <TouchableOpacity disabled={this.props.hideBack} onPress={() => this.props.navigation.goBack()} style={{ width: OnePart * 10, opacity: this.props.hideBack ? 0 : 1 }}>
-                            <Image source={require('../assets/back.png')} style={{ width: OnePart * 7, height: 30, resizeMode: 'contain', tintColor: 'black' }} />
+                            <Image source={require('../assets/left.png')} style={{ width: OnePart * 7, height: 30, resizeMode: 'contain', tintColor: 'black' }} />
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'row', paddingLeft: OnePart * 20 }} >
                             <TouchableOpacity style={{ marginRight: OnePart * 5 }} onPress={() => this.navigateToStack(RouteNames.MainTab.Tab1, RouteNames.HomeStack.Home)}>

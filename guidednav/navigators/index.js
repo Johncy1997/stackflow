@@ -13,6 +13,7 @@ import EnterZip from '../components/EnterZip';
 import RouteNames from './RouteNames';
 import Help from '../components/Help';
 import SelectNumber from '../components/SelectNumber';
+import ChooseDate from '../components/ChooseDate';
 
 const HomeStack = createStackNavigator({
     [RouteNames.HomeStack.home]: {
@@ -26,6 +27,9 @@ const HomeStack = createStackNavigator({
     },
     [RouteNames.HomeStack.selectNumber]:{
         screen:SelectNumber
+    },
+    [RouteNames.HomeStack.chooseDate]:{
+        screen: ChooseDate
     }
 }, {
     initialRouteName: RouteNames.HomeStack.home,

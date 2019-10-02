@@ -7,6 +7,7 @@ const RouteNames = {
         "home":"Home",
         "enterZip":"Enter ZIP",
         "selectNumber":"Select number",
+        "chooseDate":"Choose Date",
         "help":"Help"
     },
 

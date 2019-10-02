@@ -18,6 +18,7 @@ import {
     copilot, walkthroughable,
     CopilotStep
 } from 'react-native-copilot';
+import Tts from 'react-native-tts';
 
 const WalkthroughableTouchableOpacity = walkthroughable(TouchableOpacity);
 
@@ -48,7 +49,7 @@ const Options = [
     }
 ]
 
-const keywords = ["Change Mobile Number", "I want to change mobile number", "Edit Number", "change number"];
+const keywords = ["change mobile number", "i want to change mobile number", "edit Number", "change number"];
 
 class HomeManage extends Component {
 
@@ -72,6 +73,7 @@ class HomeManage extends Component {
         Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
         Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
         Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
+       
     }
 
     onSpeechStartHandler(e) {
@@ -92,10 +94,12 @@ class HomeManage extends Component {
         this.setState({
             results: e.value
         }, () => {
-            var check = keywords.some(r => this.state.results.indexOf(r) >= 0);
-            if (check) {
-                showToaster("We are directing...");
-                speakMessage("Please select this option to start changing your number.");
+            var z = this.state.results.filter(function (val) {
+                return keywords.indexOf(val.toLowerCase()) != -1;
+            });
+            var check = z.length;
+            if (check > 0) {
+                speakMessage("Sure thing, let me take you through the next steps. You may click on the highlighted option to confirm your selection");
                 this["Change mobile number5"].measure((x, y, width, height, pageX, pageY) => {
                     console.log(x, y, width, height, pageX, pageY);
                     this.setState({
@@ -118,9 +122,11 @@ class HomeManage extends Component {
             console.log(res);
         }).catch(err => {
             console.log(err);
-        })
-        showToaster("How may I help you?");
-        speakMessage("Hello Dunking, I'm your voice assistant. I can you help you with your transactions over voice. Feel free to ask me any questions during the transaction. Let’s get started ");
+        });
+        Tts.addEventListener('tts-start', (event) => this.setState({speechInProgress:true}));
+        Tts.addEventListener('tts-finish', (event) => this.setState({speechInProgress:false}));
+        Tts.addEventListener('tts-cancel', (event) => this.setState({speechInProgress:false}));
+        speakMessage("Hello Dunking, I’m your Verizon voice assistant. I can you help you with your transactions over voice. Feel free to ask me any questions during the transaction. Let’s get started ");
     }
 
     onStartButtonPress(e) {
@@ -136,7 +142,7 @@ class HomeManage extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <View>
+                <View pointerEvents={this.state.speechInProgress?'none':'auto'}>
                     <StatusBar barStyle='dark-content' backgroundColor="white" />
                     <ScrollView ref={view => this._scrollView = view} showsVerticalScrollIndicator={false}>
                         <View style={{ flexDirection: 'row', borderBottomColor: 'grey', borderBottomWidth: 3 }}>
@@ -155,8 +161,7 @@ class HomeManage extends Component {
                             />
                             <View style={{ padding: 5 }}>
                                 <Text style={{ marginTop: 10, fontSize: 16 }} onPress={() => {
-                                    showToaster("We are directing...");
-                                    speakMessage("We will direct you to change the mobile number");
+                                    speakMessage("Sure thing, let me take you through the next steps. You may click on the highlighted option to confirm your selection");
                                     this["Change mobile number5"].measure((x, y, width, height, pageX, pageY) => {
                                         console.log(x, y, width, height, pageX, pageY);
                                         this.setState({
@@ -164,6 +169,7 @@ class HomeManage extends Component {
                                         }, () => {
                                             this._scrollView.scrollTo({ y: pageY, animated: true })
                                         })
+                    
                                     });
                                     // this.props.start();
                                 }}>Ready to upgrade</Text>
@@ -193,8 +199,8 @@ class HomeManage extends Component {
                                     <TouchableOpacity
                                         onPress={() => {
                                             this.setState({
-                                                active:-1
-                                            },()=>{
+                                                active: -1
+                                            }, () => {
                                                 this.props.navigation.navigate(item.routeName);
                                             })
                                         }}
@@ -210,7 +216,7 @@ class HomeManage extends Component {
                                             shadowOpacity: 0.51,
                                             shadowRadius: 13.16,
                                             elevation: 20,
-                                            backgroundColor:'#ddb8ca'
+                                            backgroundColor: '#ddb8ca'
                                         } : {}]}
                                     >
                                         <Text ref={(ref) => { this[`${item.name}${index}`] = ref; }}>{item.name}</Text>
@@ -237,6 +243,7 @@ class HomeManage extends Component {
                         onPress={() => {
                             this.onStartButtonPress();
                         }}
+                        disabled={this.state.speechInProgress}
                         style={{ position: 'absolute', bottom: 10, right: 10, }}>
                         <Image style={{ height: 40, width: 40, resizeMode: 'contain', tintColor: this.state.speechInProgress ? 'blue' : 'black' }}
                             source={require('../assets/record.png')} />

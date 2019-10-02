@@ -9,6 +9,9 @@ import {
     StatusBar,
     TextInput
 } from 'react-native';
+import Tts from 'react-native-tts';
+import Voice from 'react-native-voice';
+import { showToaster, speakMessage } from '../utils/CommonFunctions';
 import { Dropdown } from 'react-native-material-dropdown';
 import RouteNames from '../navigators/RouteNames';
 
@@ -82,8 +85,20 @@ export default class SelectNumber extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            phone: ""
+            phone: "",
+            speechInProgress: false,
+            highlight: true
         }
+    }
+
+    componentDidMount() {
+        Tts.addEventListener('tts-start', (event) => this.setState({ speechInProgress: true }));
+        Tts.addEventListener('tts-finish', (event) => this.setState({ speechInProgress: false }));
+        Tts.addEventListener('tts-cancel', (event) => this.setState({ speechInProgress: false }));
+        setTimeout(() => {
+            this.drop.focus();
+        }, 600);
+        speakMessage("Here we go, select your new mobile number from the options below");
     }
 
     render() {
@@ -103,6 +118,7 @@ export default class SelectNumber extends Component {
                         />
                         <Text style={{ fontSize: 16, marginTop: 10, color: 'grey' }}>Phone number</Text>
                         <Dropdown
+                            ref={drop=>this.drop=drop}
                             containerStyle={{
                                 borderColor: 'grey',
                                 borderWidth: 1,
@@ -115,7 +131,7 @@ export default class SelectNumber extends Component {
                                 paddingRight: 5,
                                 marginTop: 10
                             }}
-                            inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                            inputContainerStyle={[{ borderBottomColor: 'transparent' },]}
                             label=""
                             data={NUMBERS}
                             labelPadding={50}
@@ -129,7 +145,7 @@ export default class SelectNumber extends Component {
                             selectedItemColor='black'
                             value={this.state.phone}
                             animationDuration={100}
-                            onChangeText={(value) => { this.setState({ phone: value }) }}
+                            onChangeText={(value) => { this.setState({ phone: value,highlight:false }); }}
                             labelTextStyle={[{
                                 fontSize: 16,
                                 color: 'black'
@@ -138,12 +154,27 @@ export default class SelectNumber extends Component {
                                 fontSize: 16,
                                 color: 'black'
                             }]}
-                            renderAccessory={() => <Image source={require('../assets/drop.png')} style={{height:'100%',width:30,resizeMode:'contain'}}/>}
-                            pickerStyle={{ borderBottomColor: 'transparent',marginLeft: 10,marginTop:65,marginRight:10,width:'92%' }}
+                            renderAccessory={() => <Image source={require('../assets/drop.png')} style={{ height: '100%', width: 30, resizeMode: 'contain' }} />}
+                            pickerStyle={[{ 
+                                borderBottomColor: 'transparent', 
+                            marginLeft: 10, 
+                            marginTop: 65, 
+                            marginRight: 10, 
+                            width: '92%' },this.state.highlight ? {
+                                shadowColor: "red",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.51,
+                                shadowRadius: 13.16,
+                                elevation: 10,
+                                backgroundColor: '#ddb8ca'
+                            } : {}]}
                         />
                         {
                             this.state.phone ? <TouchableOpacity
-                                onPress={() => this.props.navigation.popToTop(RouteNames.HomeStack.selectNumber, { phone: this.state.phone })}
+                                onPress={() => this.props.navigation.navigate(RouteNames.HomeStack.chooseDate, { phone: this.state.phone })}
                                 style={{
                                     height: 50, backgroundColor: 'black', borderRadius: 25,
                                     justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: 160,
@@ -154,8 +185,10 @@ export default class SelectNumber extends Component {
                         }
                     </ScrollView>
                 </View>
-                <TouchableOpacity style={{ position: 'absolute', bottom: 10, right: 10, }}>
-                    <Image style={{ height: 40, width: 40, resizeMode: 'contain', tintColor: 'blue' }} source={require('../assets/record.png')} />
+                <TouchableOpacity 
+                disabled={this.state.speechInProgress}
+                style={{ position: 'absolute', bottom: 10, right: 10, }}>
+                    <Image style={{ height: 40, width: 40, resizeMode: 'contain',tintColor: this.state.speechInProgress ? 'blue' : 'black' }} source={require('../assets/record.png')} />
                 </TouchableOpacity>
             </SafeAreaView>
         )

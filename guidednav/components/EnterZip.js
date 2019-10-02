@@ -10,10 +10,11 @@ import {
     TextInput
 } from 'react-native';
 import Voice from 'react-native-voice';
+import Tts from 'react-native-tts';
 import { showToaster, speakMessage } from '../utils/CommonFunctions';
 import RouteNames from '../navigators/RouteNames';
 
-const keywords = ["Why do you need zip code for","why","why you need zip code"];
+const keywords = ["why do you need zip code for", "why", "why you need zip code"];
 export default class EnterZip extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: "Enter Zip",
@@ -39,7 +40,10 @@ export default class EnterZip extends Component {
     }
 
     componentDidMount() {
-        speakMessage("Please enter your zip code here");
+        Tts.addEventListener('tts-start', (event) => this.setState({ speechInProgress: true }));
+        Tts.addEventListener('tts-finish', (event) => this.setState({ speechInProgress: false }));
+        Tts.addEventListener('tts-cancel', (event) => this.setState({ speechInProgress: false }));
+        speakMessage("Your new mobile number will be based on the zip code that you enter below");
     }
 
     onSpeechStartHandler(e) {
@@ -60,10 +64,11 @@ export default class EnterZip extends Component {
         this.setState({
             results: e.value
         }, () => {
-            var check = keywords.some(r => this.state.results.indexOf(r) >= 0);
-            console.log(check);
+            var z = this.state.results.filter(function (val) {
+                return keywords.indexOf(val.toLowerCase()) != -1;
+            });
+            var check = z.length;
             if (check) {
-                showToaster("kjsd");
                 speakMessage("Providing zip code lets you choose from the list of eligible first 6 digits of your number");
             }
         })
@@ -82,7 +87,7 @@ export default class EnterZip extends Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' backgroundColor="white" />
-                <View>
+                <View pointerEvents={this.state.speechInProgress ? 'none' : 'auto'}>
                     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20 }} showsVerticalScrollIndicator={false}>
                         <Text style={{ fontSize: 25, fontWeight: 'bold' }}>What's their ZIP code?</Text>
                         <Text style={{ fontSize: 16, marginTop: 10 }}>The fist six digits of their new phone number are based on their ZIP code.</Text>
@@ -100,6 +105,11 @@ export default class EnterZip extends Component {
                             maxLength={6}
                             onFocus={() => this.setState({ highlight: false })}
                             underlineColorAndroid="transparent"
+                            onBlur={() => {
+                                if(this.state.zipCode){
+                                    speakMessage("Now you can select one of the options from the drop down to proceed further. This gives you the first 6 digits of your new mobile number. You can select the last 4 digits in your next screen.");
+                                }
+                            }}
                             onChangeText={(value) => this.setState({ zipCode: value })}
                             style={[{
                                 borderWidth: 1, borderColor: 'grey', borderBottomWidth: 3, borderBottomColor: 'black',
@@ -118,7 +128,9 @@ export default class EnterZip extends Component {
                         />
                         {
                             this.state.zipCode ? <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate(RouteNames.HomeStack.selectNumber, { zipCode: this.state.zipCode })}
+                                onPress={() => {
+                                    this.props.navigation.navigate(RouteNames.HomeStack.selectNumber, { zipCode: this.state.zipCode });
+                                }}
                                 style={{
                                     height: 50, backgroundColor: 'black', borderRadius: 25,
                                     justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: 160,
@@ -133,6 +145,7 @@ export default class EnterZip extends Component {
                     onPress={() => {
                         this.onStartButtonPress();
                     }}
+                    disabled={this.state.speechInProgress}
                     style={{ position: 'absolute', bottom: 10, right: 10, }}>
                     <Image style={{ height: 40, width: 40, resizeMode: 'contain', tintColor: this.state.speechInProgress ? 'blue' : 'black' }} source={require('../assets/record.png')} />
                 </TouchableOpacity>

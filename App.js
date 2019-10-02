@@ -20,6 +20,7 @@ class App extends Component {
 
   render() {
     console.disableYellowBox = true;
+    console.ignoredYellowBox=true;
     return (
       <View style={{ flex: 1 }}>
         <AppContainer ref={nav => (this.primaryNavigator = nav)} />

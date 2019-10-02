@@ -17,58 +17,58 @@ import RouteNames from '../navigators/RouteNames';
 
 const NUMBERS = [
     {
-        value: "646-398-XXXX"
+        value: "646123"
     },
     {
-        value: "876-398-XXXX"
+        value: "123456"
     },
     {
-        value: "646-682-XXXX"
+        value: "233456"
     },
     {
-        value: "646-987-XXXX"
+        value: "654321"
     },
     {
-        value: "232-398-XXXX"
+        value: "098765"
     },
     {
-        value: "213-398-XXXX"
+        value: "098767"
     },
     {
-        value: "646-682-XXXX"
+        value: "124567"
     },
     {
-        value: "646-987-XXXX"
+        value: "876788"
     },
     {
-        value: "232-398-XXXX"
+        value: "980945"
     },
     {
-        value: "213-398-XXXX"
+        value: "342156"
     },
     {
-        value: "646-682-XXXX"
+        value: "767676"
     },
     {
-        value: "646-987-XXXX"
+        value: "876788"
     },
     {
-        value: "232-398-XXXX"
+        value: "980945"
     },
     {
-        value: "213-398-XXXX"
+        value: "342156"
     },
     {
-        value: "646-682-XXXX"
+        value: "767676"
     },
     {
-        value: "646-987-XXXX"
+        value: "876788"
     },
     {
-        value: "232-398-XXXX"
+        value: "980945"
     },
     {
-        value: "213-398-XXXX"
+        value: "342156"
     }
 ]
 export default class SelectNumber extends Component {
@@ -98,7 +98,7 @@ export default class SelectNumber extends Component {
         setTimeout(() => {
             this.drop.focus();
         }, 600);
-        speakMessage("Here we go, select your new mobile number from the options below");
+        speakMessage("Now you can select one of the options from the drop down to proceed further. This gives you the first 6 digits of your new mobile number. You can select the last 4 digits in your next screen.");
     }
 
     render() {
@@ -174,7 +174,7 @@ export default class SelectNumber extends Component {
                         />
                         {
                             this.state.phone ? <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate(RouteNames.HomeStack.chooseDate, { phone: this.state.phone })}
+                                onPress={() => this.props.navigation.navigate(RouteNames.HomeStack.selectLastFour, { phone: this.state.phone })}
                                 style={{
                                     height: 50, backgroundColor: 'black', borderRadius: 25,
                                     justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: 160,

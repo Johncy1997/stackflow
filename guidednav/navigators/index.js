@@ -14,6 +14,7 @@ import RouteNames from './RouteNames';
 import Help from '../components/Help';
 import SelectNumber from '../components/SelectNumber';
 import ChooseDate from '../components/ChooseDate';
+import SelectLastDigits from '../components/SelectLastDigits';
 
 const HomeStack = createStackNavigator({
     [RouteNames.HomeStack.home]: {
@@ -30,6 +31,9 @@ const HomeStack = createStackNavigator({
     },
     [RouteNames.HomeStack.chooseDate]:{
         screen: ChooseDate
+    },
+    [RouteNames.HomeStack.selectLastFour]:{
+        screen: SelectLastDigits
     }
 }, {
     initialRouteName: RouteNames.HomeStack.home,

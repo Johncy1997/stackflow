@@ -14,6 +14,9 @@ import Voice from 'react-native-voice';
 import { showToaster, speakMessage } from '../utils/CommonFunctions';
 import RouteNames from '../navigators/RouteNames';
 
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
 export default class ChooseDate extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: "Select date",
@@ -28,7 +31,7 @@ export default class ChooseDate extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            date: 0,
+            date: -1,
             speechInProgress:false
         }
         Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
@@ -82,6 +85,7 @@ export default class ChooseDate extends Component {
     }
 
     render() {
+        const d = new Date();
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' backgroundColor="white" />
@@ -106,7 +110,7 @@ export default class ChooseDate extends Component {
                                 </TouchableOpacity>
                                 <View>
                                     <Text style={{fontSize:16,color:'black',fontWeight:'800'}}>Today</Text>
-                                    <Text style={{fontSize:14,color:'grey',marginTop:5}}>Dec 19</Text>
+                                    <Text style={{fontSize:14,color:'grey',marginTop:5}}>{monthNames[d.getMonth()]} {d.getDate()}</Text>
                                 </View>
                             </View>
                             <View style={{flexDirection:'row',alignItems:'center',paddingBottom:20,borderBottomColor:'grey',borderBottomWidth:1,paddingTop:20}}>

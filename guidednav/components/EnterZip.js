@@ -105,11 +105,6 @@ export default class EnterZip extends Component {
                             maxLength={6}
                             onFocus={() => this.setState({ highlight: false })}
                             underlineColorAndroid="transparent"
-                            onBlur={() => {
-                                if(this.state.zipCode){
-                                    speakMessage("Now you can select one of the options from the drop down to proceed further. This gives you the first 6 digits of your new mobile number. You can select the last 4 digits in your next screen.");
-                                }
-                            }}
                             onChangeText={(value) => this.setState({ zipCode: value })}
                             style={[{
                                 borderWidth: 1, borderColor: 'grey', borderBottomWidth: 3, borderBottomColor: 'black',

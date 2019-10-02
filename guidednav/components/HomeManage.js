@@ -49,7 +49,7 @@ const Options = [
     }
 ]
 
-const keywords = ["change mobile number", "i want to change mobile number", "edit Number", "change number"];
+const keywords = ["change mobile number", "i want to change mobile number", "edit Number", "change number","change my number"];
 
 class HomeManage extends Component {
 
@@ -126,7 +126,7 @@ class HomeManage extends Component {
         Tts.addEventListener('tts-start', (event) => this.setState({speechInProgress:true}));
         Tts.addEventListener('tts-finish', (event) => this.setState({speechInProgress:false}));
         Tts.addEventListener('tts-cancel', (event) => this.setState({speechInProgress:false}));
-        speakMessage("Hello Dunking, I’m your Verizon voice assistant. I can you help you with your transactions over voice. Feel free to ask me any questions during the transaction. Let’s get started ");
+        speakMessage("Hello Dunking, I'm your virtual assistant, how may I help you");
     }
 
     onStartButtonPress(e) {
@@ -161,7 +161,7 @@ class HomeManage extends Component {
                             />
                             <View style={{ padding: 5 }}>
                                 <Text style={{ marginTop: 10, fontSize: 16 }} onPress={() => {
-                                    speakMessage("Sure thing, let me take you through the next steps. You may click on the highlighted option to confirm your selection");
+                                    speakMessage("SSure thing, let me take you through the next steps. You may click on the highlighted option to confirm your selection");
                                     this["Change mobile number5"].measure((x, y, width, height, pageX, pageY) => {
                                         console.log(x, y, width, height, pageX, pageY);
                                         this.setState({

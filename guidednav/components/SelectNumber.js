@@ -17,58 +17,58 @@ import RouteNames from '../navigators/RouteNames';
 
 const NUMBERS = [
     {
-        value: "646123"
+        value: "646-123"
     },
     {
-        value: "123456"
+        value: "123-456"
     },
     {
-        value: "233456"
+        value: "233-456"
     },
     {
-        value: "654321"
+        value: "654-321"
     },
     {
-        value: "098765"
+        value: "098-765"
     },
     {
-        value: "098767"
+        value: "098-767"
     },
     {
-        value: "124567"
+        value: "124-567"
     },
     {
-        value: "876788"
+        value: "876-788"
     },
     {
-        value: "980945"
+        value: "980-945"
     },
     {
-        value: "342156"
+        value: "342-156"
     },
     {
-        value: "767676"
+        value: "767-676"
     },
     {
-        value: "876788"
+        value: "876-788"
     },
     {
-        value: "980945"
+        value: "980-945"
     },
     {
-        value: "342156"
+        value: "342-156"
     },
     {
-        value: "767676"
+        value: "767-676"
     },
     {
-        value: "876788"
+        value: "876-788"
     },
     {
-        value: "980945"
+        value: "980-945"
     },
     {
-        value: "342156"
+        value: "342-156"
     }
 ]
 export default class SelectNumber extends Component {

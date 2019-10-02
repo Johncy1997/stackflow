@@ -34,58 +34,58 @@ export default class SelectLastDigits extends Component {
             highlight: true,
             NUMBERS:[
                 {
-                    value: "1234"
+                    value: "-1234"
                 },
                 {
-                    value: "7587"
+                    value: "-7587"
                 },
                 {
-                    value: "8756"
+                    value: "-8756"
                 },
                 {
-                    value: "3456"
+                    value: "-3456"
                 },
                 {
-                    value: "5678"
+                    value: "-5678"
                 },
                 {
-                    value: "9087"
+                    value: "-9087"
                 },
                 {
-                    value: "1098"
+                    value: "-1098"
                 },
                 {
-                    value: "0909"
+                    value: "-0909"
                 },
                 {
-                    value: "9000"
+                    value: "-9000"
                 },
                 {
-                    value: "9001"
+                    value: "-9001"
                 },
                 {
-                    value: "8000"
+                    value: "-8000"
                 },
                 {
-                    value: "7000"
+                    value: "-7000"
                 },
                 {
-                    value: "6000"
+                    value: "-6000"
                 },
                 {
-                    value: "5000"
+                    value: "-5000"
                 },
                 {
-                    value: "4000"
+                    value: "-4000"
                 },
                 {
-                    value: "3000"
+                    value: "-3000"
                 },
                 {
-                    value: "2000"
+                    value: "-2000"
                 },
                 {
-                    value: "1000"
+                    value: "-1000"
                 }
             ]
         }
